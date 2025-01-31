@@ -16,7 +16,7 @@ const findURL = async (original_url) => {
 router.post("/shorturl", async (req, res) => {
 	const { url: original_url } = req.body;
 	if (!validUrl.isUri(original_url)) {
-		res.json({ error: "invalid URL" });
+		res.json({ error: "invalid url" });
 	} else {
 		// check if url already exists in database
 		let url = await findURL(original_url);
