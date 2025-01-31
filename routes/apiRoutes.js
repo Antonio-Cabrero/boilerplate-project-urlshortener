@@ -42,7 +42,7 @@ router.post("/shorturl", async (req, res) => {
 router.get("/shorturl/:shorturl", async (req, res) => {
 	const id = req.params.shorturl;
 	const url = await URL.findOne({ short_url: id });
-	res.json({ original_url: url.original_url });
+	res.redirect(url.original_url);
 });
 
 module.exports = router;
