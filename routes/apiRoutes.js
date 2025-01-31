@@ -14,29 +14,33 @@ const findURL = async (original_url) => {
 };
 
 router.post("/shorturl", async (req, res) => {
-	const { url: original_url } = req.body;
-	console.log(original_url);
-	if (!validUrl.isUri(original_url)) {
-		return res.json({ error: "invalid url" });
-	} else {
-		// check if url already exists in database
-		let url = await findURL(original_url);
-		if (url) {
-			console.log("found");
-			res.json(url.short_url);
+	try {
+		const { url: original_url } = req.body;
+		console.log(original_url);
+		if (!validUrl.isUri(original_url)) {
+			return res.json({ error: "invalid url" });
 		} else {
-			// shortenURL
-			const urls = await URL.find();
+			// check if url already exists in database
+			let url = await findURL(original_url);
+			if (url) {
+				console.log("found");
+				res.json(url.short_url);
+			} else {
+				// shortenURL
+				const urls = await URL.find();
 
-			// write to database
-			url = new URL({
-				short_url: urls.length,
-				original_url,
-			});
-			await url.save();
-			console.log("saved");
-			res.json({ original_url: url.original_url, short_url: url.short_url });
+				// write to database
+				url = new URL({
+					short_url: urls.length,
+					original_url,
+				});
+				await url.save();
+				console.log("saved");
+				res.json({ original_url: url.original_url, short_url: url.short_url });
+			}
 		}
+	} catch (err) {
+		return res.json({ error: "invalid url" });
 	}
 });
 
