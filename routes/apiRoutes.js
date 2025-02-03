@@ -22,15 +22,10 @@ function validateURL(url) {
 			console.log("null");
 			return false;
 		} else {
-			const dnsValid = dns.lookup(submittedUrl, (err, addr) => {
-				if (err || !addr) {
-					console.log("err", err);
-					return false;
-				} else {
-					return true;
-				}
-			});
-			if (!dnsValid && !validUrl.isUri(submittedUrl)) {
+			if (
+				!validUrl.isHttpUri(submittedUrl) &&
+				!validUrl.isHttpsUri(submittedUrl)
+			) {
 				console.log("not valid");
 				return false;
 			} else {
@@ -44,7 +39,7 @@ function validateURL(url) {
 
 router.post("/shorturl", async (req, res) => {
 	const { url: original_url } = req.body;
-	const isValid = validateURL(original_url);
+	const isValid = await validateURL(original_url);
 	console.log("isValid", isValid);
 	if (isValid) {
 		// check if url already exists in database
