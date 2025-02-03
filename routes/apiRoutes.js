@@ -19,16 +19,19 @@ function validateURL(url) {
 	try {
 		console.log("submittedUrl", submittedUrl);
 		if (submittedUrl === null || submittedUrl === "") {
+			console.log("null");
 			return false;
 		} else {
 			const dnsValid = dns.lookup(submittedUrl, (err, addr) => {
 				if (err || !addr) {
+					console.log("err", err);
 					return false;
 				} else {
 					return true;
 				}
 			});
 			if (!dnsValid && !validUrl.isUri(submittedUrl)) {
+				console.log("not valid");
 				return false;
 			} else {
 				return true;
@@ -62,6 +65,8 @@ router.post("/shorturl", async (req, res) => {
 			console.log("saved");
 			res.json({ original_url: url.original_url, short_url: url.short_url });
 		}
+	} else {
+		res.json({ error: "invalid url" });
 	}
 });
 
